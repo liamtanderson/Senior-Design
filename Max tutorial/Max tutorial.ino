@@ -10,6 +10,7 @@ int outValue = 120;//value to be sent to serial/max
 // put your setup code here, to run once:
 void setup() {
   // Initalize the button on pin 2
+  //TEST penis
   pinMode(buttonPin, INPUT);
   // Initalize the LED
   pinMode(ledPin, OUTPUT);
