@@ -1,5 +1,7 @@
 #include <Time.h> 
 #include <Wire.h>
+
+//Get this song 
 //Todo, cleanup accel code into import statement
 //Jitter and Latency Values
 unsigned long clocktime;
@@ -9,13 +11,13 @@ int jitter = 0;
 int totalJitter = 0;
 int latency = 0;
 int lastLatency = 0;
-int delayTime = 1000;
+int delayTime = 10;
 
 //WhatShouldRun
 int JoystickRun = 1;
-int GyroRun = 0;
+int GyroRun = 1;
 int AccelRun = 0;
-int ButtonRun = 0;
+int ButtonRun = 1;
 
 //Joystick Values
 int joyX = A0;
@@ -68,16 +70,17 @@ void setup() {
 void loop() {
   //Run Joystick Code
   if(JoystickRun == 1){
+    processJoyStick();
+    /*
     int xValue = analogRead(joyX);
     int yValue = analogRead(joyY);
-    /*
     mapX = map(xValue, 0, 1023, -512, 512);
     mapY = map(yValue, 0, 1023, -512, 512);
-    */
     Serial.print("JoyX: ");
     Serial.print(xValue);
     Serial.print(" | JoyY: ");
     Serial.println(yValue);
+    */
   }
   //End Joystick Code
 
@@ -98,21 +101,7 @@ void loop() {
     runButtonCode();
   }
   
-  // Calculate Latency
   delay(delayTime);
-  clocktime=millis();
-  lastLatency = latency;
-  latency = clocktime - lasttime - delayTime;
-  lasttime = clocktime;
-  
-  // Calculate Jitter
-  numMeasurements++;
-  totalJitter += abs(latency - lastLatency);
-  jitter = totalJitter/numMeasurements;
-  Serial.print("Latency: ");
-  Serial.print(latency);
-  Serial.print(" | Average Jitter: ");
-  Serial.println(jitter);
 }
 
 //Button Code
@@ -215,6 +204,10 @@ void processGyroData() {
 }
 
 void printAccelData() {
+  if(rotX > 50){
+    Serial.println(rotX+ 100);
+  }
+  /*
   Serial.print("Gyro (deg)");
   Serial.print(" X=");
   Serial.print(rotX);
@@ -229,4 +222,35 @@ void printAccelData() {
   Serial.print(gForceY);
   Serial.print(" Z=");
   Serial.println(gForceZ);
+  */
+}
+
+void processJoyStick(){
+  int xValue = analogRead(joyX);
+  int yValue = analogRead(joyY);
+  if(yValue < 100 && xValue < 100){
+    Serial.println(10000);
+  }
+  else if(xValue < 100){
+    Serial.println(20000);
+  }
+  else if(xValue < 100 && yValue > 900){
+    Serial.println(30000);
+  }
+  else if(yValue > 900){
+    Serial.println(40000);
+  }
+  else if(yValue > 900 && xValue > 900){
+    Serial.println(50000);
+  }
+  else if(xValue > 900){
+    Serial.println(60000);
+  }
+  else if(xValue > 800 && yValue < 200){
+    Serial.println(70000);
+  }
+  else if(yValue < 100){
+    Serial.println(80000);
+  }
+  
 }
