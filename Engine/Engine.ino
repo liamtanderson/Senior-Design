@@ -1,8 +1,6 @@
 #include <Time.h> 
 #include <Wire.h>
 
-//Get this song 
-//Todo, cleanup accel code into import statement
 //Jitter and Latency Values
 unsigned long clocktime;
 int lasttime = 0;
@@ -201,10 +199,6 @@ void processGyroData() {
 }
 
 void printAccelData() {
-  if(rotX > 50){
-    Serial.println(rotX+ 100);
-  }
-  /*
   Serial.print("Gyro (deg)");
   Serial.print(" X=");
   Serial.print(rotX);
@@ -219,35 +213,13 @@ void printAccelData() {
   Serial.print(gForceY);
   Serial.print(" Z=");
   Serial.println(gForceZ);
-  */
 }
 
 void processJoyStick(){
   int xValue = analogRead(joyX);
   int yValue = analogRead(joyY);
-  if(yValue < 100 && xValue < 100){
-    Serial.println(10000);
-  }
-  else if(xValue < 100){
-    Serial.println(20000);
-  }
-  else if(xValue < 100 && yValue > 900){
-    Serial.println(30000);
-  }
-  else if(yValue > 900){
-    Serial.println(40000);
-  }
-  else if(yValue > 900 && xValue > 900){
-    Serial.println(50000);
-  }
-  else if(xValue > 900){
-    Serial.println(60000);
-  }
-  else if(xValue > 800 && yValue < 200){
-    Serial.println(70000);
-  }
-  else if(yValue < 100){
-    Serial.println(80000);
-  }
-  
+  Serial.print("JoyX: ");
+  Serial.print(xValue);
+  Serial.print(" | JoyY: ");
+  Serial.println(yValue);
 }
