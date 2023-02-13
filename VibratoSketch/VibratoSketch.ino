@@ -25,17 +25,14 @@ int joyY = A1;
 //int mapX = 0;
 //int mapY = 0;
 
-//Button Values
-const int button1 = 3;
-const int button2 = 4;
-const int button3 = 5;
-
-int button1State = 0; //Current State of Button
-int lastButton1State = 0; //Previous Button State
-int button2State = 0; //Current State of Button
-int lastButton2State = 0; //Previous Button State
-int button3State = 0; //Current State of Button
-int lastButton3State = 0; //Previous Button State
+#include <ezButton.h>
+// Initalize the buttons
+ezButton button1(3);
+ezButton button2(4);
+ezButton button3(5);
+int button1State = 0;
+int button2State = 0;
+int button3State = 0;
 
 //Accelerometer Values
 long accelX, accelY, accelZ;
@@ -45,7 +42,7 @@ float rotX, rotY, rotZ;
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(57600);
 
   //Joystick Init
   if(JoystickRun == 1){
@@ -64,6 +61,10 @@ void setup() {
     pinMode(button1, INPUT);
     pinMode(button2, INPUT);
     pinMode(button3, INPUT);
+    //Initialize the serial communication
+    button1.setDebounceTime(30); // set debounce time to 30 milliseconds
+    button2.setDebounceTime(30); 
+    button3.setDebounceTime(30); 
   }
 }
 
@@ -106,50 +107,46 @@ void loop() {
 
 //Button Code
 void runButtonCode(){
-  button1State = digitalRead(button1);
-  button2State = digitalRead(button2);
-  button3State = digitalRead(button3);
+  // read button states
+  button1.loop();
+  button2.loop();
+  button3.loop();
 
-  //See if button changed
-  if(button1State != lastButton1State) {
-    //If the state has changed, do nothing
-    if(button1State == 1){
-      
-    } 
-    else{
-      //If current state is low, send value
-      Serial.println(1);
-    }
+  button1State = button1.getState();
+  button2State = button2.getState();
+  button3State = button3.getState();
+
+  if(!(button1State) && !(button2State) && !(button3State)){ // 000
+    Serial.println(0);
   }
 
-  //See if button changed
-  if(button2State != lastButton2State) {
-    //If the state has changed, do nothing
-    if(button2State == 1){
-      
-    } 
-    else{
-      //If current state is low, send value
-      Serial.println(2);
-    }
+  if(button1State && !(button2State) && !(button3State)){ // 001
+    Serial.println(2);
   }
 
-  //See if button3 changed
-  if(button3State != lastButton3State) {
-    //If the state has changed, do nothing
-    if(button3State == 1){
-      
-    } 
-    else{
-      //If current state is low, send value
-      Serial.println(3);
-    }
+  if(!(button1State) && button2State && !(button3State)){ // 010
+    Serial.println(4);
   }
 
-  //Update last state
-  lastButton1State = button1State;
-  lastButton2State = button2State;
-  lastButton3State = button3State;
+  if(button1State && button2State && !(button3State)) { // 011
+    Serial.println(5);
+  }
+
+  if(!(button1State) && !(button2State) && button3State) { // 100
+    Serial.println(7);
+  }
+
+  if(button1State && !(button2State) && button3State) { // 101
+    Serial.println(9);
+  }
+
+  if(!(button1State) && button2State && button3State) { // 110
+    Serial.println(11);
+  }
+
+  if(button1State && button2State && button3State) { // 111
+    Serial.println(12);
+  }
 }
 //Accel Code
 void setupMPU(){
