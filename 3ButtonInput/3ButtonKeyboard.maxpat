@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 35.0, 84.0, 1468.0, 713.0 ],
+		"rect" : [ 42.0, 85.0, 1466.0, 711.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -40,25 +40,72 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
-					"id" : "obj-53",
-					"linecount" : 4,
+					"id" : "obj-13",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 762.0, 689.0, 150.0, 62.0 ],
-					"text" : "this seems to output a note offset, could be useful to change \"home\" pitch for fingering system"
+					"patching_rect" : [ 127.5, 641.0, 150.0, 20.0 ],
+					"text" : "is more than"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"id" : "obj-48",
+					"id" : "obj-25",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 31.5, 641.0, 85.0, 22.0 ],
+					"text" : "accelerometer"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-21",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 223.0, 641.0, 58.0, 22.0 ],
+					"text" : "threshold"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-18",
+					"maxclass" : "newobj",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "int" ],
+					"patching_rect" : [ 265.0, 688.0, 29.5, 22.0 ],
+					"text" : ">"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-9",
+					"maxclass" : "newobj",
+					"numinlets" : 3,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 260.0, 723.0, 42.0, 22.0 ],
+					"text" : "switch"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-53",
 					"linecount" : 3,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 840.0, 536.0, 150.0, 48.0 ],
-					"text" : "would it be better to put the threshold switch at noteout instead?"
+					"patching_rect" : [ 752.5, 730.0, 150.0, 48.0 ],
+					"text" : "adding constant to ascii input for midi-range pitch output"
 				}
 
 			}
@@ -69,8 +116,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 417.0, 487.0, 150.0, 34.0 ],
-					"text" : "these messages are placeholders"
+					"patching_rect" : [ 127.5, 597.0, 150.0, 34.0 ],
+					"text" : "these messages are placeholders for numbers"
 				}
 
 			}
@@ -116,44 +163,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 676.0, 536.0, 150.0, 62.0 ],
+					"patching_rect" : [ 31.5, 683.0, 150.0, 62.0 ],
 					"text" : "TODO: find a way to keep it open for X time? maybe a hold + delay before closing the switch again?"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-25",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 417.0, 530.0, 85.0, 22.0 ],
-					"text" : "accelerometer"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-21",
-					"maxclass" : "message",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 417.0, 562.0, 58.0, 22.0 ],
-					"text" : "threshold"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-18",
-					"maxclass" : "newobj",
-					"numinlets" : 2,
-					"numoutlets" : 1,
-					"outlettype" : [ "int" ],
-					"patching_rect" : [ 336.5, 575.0, 29.5, 22.0 ],
-					"text" : ">"
 				}
 
 			}
@@ -164,20 +175,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 509.0, 536.0, 150.0, 62.0 ],
+					"patching_rect" : [ 31.5, 499.0, 150.0, 62.0 ],
 					"text" : "Decoding accel input: if greater than (threshold), output 1 to switch to enable note output"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-9",
-					"maxclass" : "newobj",
-					"numinlets" : 3,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 325.0, 611.0, 42.0, 22.0 ],
-					"text" : "switch"
 				}
 
 			}
@@ -188,19 +187,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 185.0, 260.0, 35.0, 22.0 ],
+					"patching_rect" : [ 171.0, 242.0, 35.0, 22.0 ],
 					"text" : "open"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-15",
-					"maxclass" : "newobj",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"patching_rect" : [ 1106.0, 360.0, 18.0, 22.0 ],
-					"text" : "if"
 				}
 
 			}
@@ -210,7 +198,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 3,
 					"numoutlets" : 0,
-					"patching_rect" : [ 226.0, 908.0, 49.0, 22.0 ],
+					"patching_rect" : [ 260.0, 795.0, 49.0, 22.0 ],
 					"text" : "noteout"
 				}
 
@@ -222,7 +210,7 @@
 					"numinlets" : 3,
 					"numoutlets" : 2,
 					"outlettype" : [ "float", "float" ],
-					"patching_rect" : [ 226.0, 852.5, 101.0, 22.0 ],
+					"patching_rect" : [ 260.0, 750.0, 101.0, 22.0 ],
 					"text" : "makenote 50 250"
 				}
 
@@ -235,7 +223,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "int", "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 407.0, 782.5, 336.0, 53.0 ]
+					"patching_rect" : [ 397.5, 823.5, 336.0, 53.0 ]
 				}
 
 			}
@@ -248,7 +236,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 226.0, 798.0, 50.0, 22.0 ]
+					"patching_rect" : [ 316.0, 646.0, 50.0, 22.0 ]
 				}
 
 			}
@@ -260,7 +248,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "int", "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 407.0, 689.0, 336.0, 53.0 ]
+					"patching_rect" : [ 397.5, 730.0, 336.0, 53.0 ]
 				}
 
 			}
@@ -271,7 +259,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
-					"patching_rect" : [ 226.0, 749.0, 29.5, 22.0 ],
+					"patching_rect" : [ 316.0, 597.0, 29.5, 22.0 ],
 					"text" : "+"
 				}
 
@@ -285,7 +273,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 226.0, 701.0, 50.0, 22.0 ]
+					"patching_rect" : [ 316.0, 549.0, 50.0, 22.0 ]
 				}
 
 			}
@@ -403,7 +391,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 762.0, 241.0, 37.0, 22.0 ],
+					"patching_rect" : [ 211.0, 242.0, 37.0, 22.0 ],
 					"text" : "close"
 				}
 
@@ -418,7 +406,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-9", 0 ],
+					"destination" : [ "obj-16", 0 ],
 					"source" : [ "obj-11", 0 ]
 				}
 
@@ -439,7 +427,8 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-9", 1 ],
+					"destination" : [ "obj-9", 0 ],
+					"midpoints" : [ 274.5, 721.0 ],
 					"source" : [ "obj-18", 0 ]
 				}
 
@@ -482,6 +471,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-41", 1 ],
+					"midpoints" : [ 407.0, 795.0, 389.0, 795.0, 389.0, 587.0, 336.0, 587.0 ],
 					"source" : [ "obj-40", 0 ]
 				}
 
@@ -496,6 +486,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-39", 0 ],
+					"midpoints" : [ 325.5, 737.0, 376.0, 737.0, 376.0, 817.0, 407.0, 817.0 ],
 					"order" : 0,
 					"source" : [ "obj-45", 0 ]
 				}
@@ -503,7 +494,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-50", 0 ],
+					"destination" : [ "obj-9", 1 ],
 					"order" : 1,
 					"source" : [ "obj-45", 0 ]
 				}
@@ -560,7 +551,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-16", 0 ],
+					"destination" : [ "obj-50", 0 ],
 					"source" : [ "obj-9", 0 ]
 				}
 
