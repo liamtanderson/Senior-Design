@@ -1,5 +1,7 @@
 #include <Time.h> 
 #include <Wire.h>
+#include <MIDIUSB.h>
+#include "PitchToNote.h"
 
 //Jitter and Latency Values
 unsigned long clocktime;
@@ -14,7 +16,7 @@ int delayTime = 10;
 //WhatShouldRun
 int JoystickRun = 1;
 int GyroRun = 1;
-int AccelRun = 0;
+int AccelRun = 1;
 int ButtonRun = 1;
 
 //Joystick Values
@@ -23,14 +25,14 @@ int joyY = A1;
 //int mapX = 0;
 //int mapY = 0;
 
+// MIDI values
+int intensity = 55;
+
 #include <ezButton.h>
 // Initalize the buttons
 ezButton button1(3);
 ezButton button2(4);
 ezButton button3(5);
-int button1State = 0;
-int button2State = 0;
-int button3State = 0;
 
 //Accelerometer Values
 long accelX, accelY, accelZ;
@@ -56,9 +58,6 @@ void setup() {
 
   // Initalize the buttons
   if(ButtonRun == 1){
-    pinMode(button1, INPUT);
-    pinMode(button2, INPUT);
-    pinMode(button3, INPUT);
     //Initialize the serial communication
     button1.setDebounceTime(30); // set debounce time to 30 milliseconds
     button2.setDebounceTime(30); 
@@ -92,6 +91,7 @@ void loop() {
   }
   if(AccelRun == 1 || GyroRun == 1){
     printAccelData();
+  // TODO add code to transmit accel data via software serial port    
   }
   //End Accel Code
 
@@ -110,40 +110,68 @@ void runButtonCode(){
   button2.loop();
   button3.loop();
 
-  button1State = button1.getState();
-  button2State = button2.getState();
-  button3State = button3.getState();
-
-  if(!(button1State) && !(button2State) && !(button3State)){ // 000
-    Serial.println(0);
+  if(!(button1.getState()) && !(button2.getState()) && !(button3.getState())){ // 000
+    noteOn(0, C2, intensity);
+    MIDIUSB.flush();
+  } else {
+    noteOff(0,C2, intensity);
+    MIDIUSB.flush();
   }
 
-  if(button1State && !(button2State) && !(button3State)){ // 001
-    Serial.println(2);
+  if(button1.getState() && !(button2.getState()) && !(button3.getState())){ // 001
+    noteOn(0, D2, intensity);
+    MIDIUSB.flush();
+  } else {
+    noteOff(0,D2, intensity);
+    MIDIUSB.flush();
   }
 
-  if(!(button1State) && button2State && !(button3State)){ // 010
-    Serial.println(4);
+  if(!(button1.getState()) && button2.getState() && !(button3.getState())){ // 010
+    noteOn(0, E2, intensity);
+    MIDIUSB.flush();
+  } else {
+    noteOff(0,E2, intensity);
+    MIDIUSB.flush();
   }
 
-  if(button1State && button2State && !(button3State)) { // 011
-    Serial.println(5);
+  if(button1.getState() && button2.getState() && !(button3.getState())) { // 011
+    noteOn(0, F2, intensity);
+    MIDIUSB.flush();
+  } else {
+    noteOff(0,F2, intensity);
+    MIDIUSB.flush();
   }
 
-  if(!(button1State) && !(button2State) && button3State) { // 100
-    Serial.println(7);
+  if(!(button1.getState()) && !(button2.getState()) && button3.getState()) { // 100
+    noteOn(0, G2, intensity);
+    MIDIUSB.flush();
+  } else {
+    noteOff(0,G2, intensity);
+    MIDIUSB.flush();
   }
 
-  if(button1State && !(button2State) && button3State) { // 101
-    Serial.println(9);
+  if(button1.getState() && !(button2.getState()) && button3.getState()) { // 101
+    noteOn(0, A2, intensity);
+    MIDIUSB.flush();
+  } else {
+    noteOff(0,A2, intensity);
+    MIDIUSB.flush();
   }
 
-  if(!(button1State) && button2State && button3State) { // 110
-    Serial.println(11);
+  if(!(button1.getState()) && button2.getState() && button3.getState()) { // 110
+    noteOn(0, B2, intensity);
+    MIDIUSB.flush();
+  } else {
+    noteOff(0,B2, intensity);
+    MIDIUSB.flush();
   }
 
-  if(button1State && button2State && button3State) { // 111
-    Serial.println(12);
+  if(button1.getState() && button2.getState() && button3.getState()) { // 111
+    noteOn(0, C3, intensity);
+    MIDIUSB.flush();
+  } else {
+    noteOff(0,C3, intensity);
+    MIDIUSB.flush();
   }
 }
 //Accel Code
