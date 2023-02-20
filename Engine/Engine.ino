@@ -1,5 +1,6 @@
 #include <Time.h> 
 #include <Wire.h>
+#include <ezButton.h>
 
 //Jitter and Latency Values
 unsigned long clocktime;
@@ -12,9 +13,9 @@ int lastLatency = 0;
 int delayTime = 10;
 
 //WhatShouldRun
-int JoystickRun = 1;
+int JoystickRun = 0;
 int GyroRun = 1;
-int AccelRun = 0;
+int AccelRun = 1;
 int ButtonRun = 1;
 
 //Joystick Values
@@ -23,7 +24,6 @@ int joyY = A1;
 //int mapX = 0;
 //int mapY = 0;
 
-#include <ezButton.h>
 // Initalize the buttons
 ezButton button1(3);
 ezButton button2(4);
@@ -56,9 +56,6 @@ void setup() {
 
   // Initalize the buttons
   if(ButtonRun == 1){
-    pinMode(button1, INPUT);
-    pinMode(button2, INPUT);
-    pinMode(button3, INPUT);
     //Initialize the serial communication
     button1.setDebounceTime(30); // set debounce time to 30 milliseconds
     button2.setDebounceTime(30); 
@@ -85,13 +82,16 @@ void loop() {
 
   //Run Accel Code
   if(AccelRun == 1){
-    recordAccelRegisters();
+    recordAccelRegisters();        // print negative Z value with 4 decimal places
+                                  // max will decode negative serial input as accel
   }
   if(GyroRun == 1){
     recordGyroRegisters();
   }
   if(AccelRun == 1 || GyroRun == 1){
-    printAccelData();
+    //printAccelData();
+    Serial.println(-1*abs(gForceZ), 4);
+    delay(20);
   }
   //End Accel Code
 
