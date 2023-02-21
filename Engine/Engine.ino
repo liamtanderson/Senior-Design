@@ -39,8 +39,7 @@ long gyroX, gyroY, gyroZ;
 float rotX, rotY, rotZ;
 
 void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(57600);
+  Serial.begin(9600);
 
   //Joystick Init
   if(JoystickRun == 1){
@@ -54,10 +53,9 @@ void setup() {
     setupMPU();
   }
 
-  // Initalize the buttons
+  // Button Init
   if(ButtonRun == 1){
-    //Initialize the serial communication
-    button1.setDebounceTime(30); // set debounce time to 30 milliseconds
+    button1.setDebounceTime(30);
     button2.setDebounceTime(30); 
     button3.setDebounceTime(30); 
   }
@@ -83,17 +81,13 @@ void loop() {
   //Run Accel Code
   if(AccelRun == 1){
     recordAccelRegisters();        // print negative Z value with 4 decimal places
-                                  // max will decode negative serial input as accel
   }
   if(GyroRun == 1){
     recordGyroRegisters();
   }
   if(AccelRun == 1 || GyroRun == 1){
-    //printAccelData();
-    Serial.println(-1*abs(gForceZ), 4);
-    delay(20);
+    Serial.println(-1*abs(gForceZ), 4); // formatted for max usage
   }
-  //End Accel Code
 
   //Button Code
   if(ButtonRun == 1){
@@ -110,13 +104,13 @@ void runButtonCode(){
   button2.loop();
   button3.loop();
 
-  button1State = button1.getState();
-  button2State = button2.getState();
-  button3State = button3.getState();
+  button1State = !(button1.getState());
+  button2State = !(button2.getState());
+  button3State = !(button3.getState());
 
-  if(!(button1State) && !(button2State) && !(button3State)){ // 000
-    Serial.println(0);
-  }
+  // if(!(button1State) && !(button2State) && !(button3State)){ // 000
+  //  Serial.println(0);
+  // }
 
   if(button1State && !(button2State) && !(button3State)){ // 001
     Serial.println(2);
@@ -146,6 +140,7 @@ void runButtonCode(){
     Serial.println(12);
   }
 }
+
 //Accel Code
 void setupMPU(){
   Wire.beginTransmission(0b1101000); //This is the I2C address of the MPU (b1101000/b1101001 for AC0 low/high datasheet sec. 9.2)
