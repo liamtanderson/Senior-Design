@@ -108,36 +108,36 @@ void runButtonCode(){
   button2State = !(button2.getState());
   button3State = !(button3.getState());
 
-  // if(!(button1State) && !(button2State) && !(button3State)){ // 000
-  //  Serial.println(0);
-  // }
+  if(!(button1State) && !(button2State) && !(button3State)){ // 000
+     Serial.println(1);
+  }
 
   if(button1State && !(button2State) && !(button3State)){ // 001
-    Serial.println(2);
+    Serial.println(3);
   }
 
   if(!(button1State) && button2State && !(button3State)){ // 010
-    Serial.println(4);
-  }
-
-  if(button1State && button2State && !(button3State)) { // 011
     Serial.println(5);
   }
 
+  if(button1State && button2State && !(button3State)) { // 011
+    Serial.println(6);
+  }
+
   if(!(button1State) && !(button2State) && button3State) { // 100
-    Serial.println(7);
+    Serial.println(8);
   }
 
   if(button1State && !(button2State) && button3State) { // 101
-    Serial.println(9);
+    Serial.println(10);
   }
 
   if(!(button1State) && button2State && button3State) { // 110
-    Serial.println(11);
+    Serial.println(12);
   }
 
   if(button1State && button2State && button3State) { // 111
-    Serial.println(12);
+    Serial.println(13);
   }
 }
 
