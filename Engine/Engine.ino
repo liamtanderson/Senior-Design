@@ -21,16 +21,18 @@ int ButtonRun = 1;
 //Joystick Values
 int joyX = A0;
 int joyY = A1;
-//int mapX = 0;
-//int mapY = 0;
+int mapX = 0;
+int mapY = 0;
 
 // Initalize the buttons
 ezButton button1(3);
 ezButton button2(4);
 ezButton button3(5);
+ezButton joyButton(6);
 int button1State = 0;
 int button2State = 0;
 int button3State = 0;
+int joyButtonState = 0;
 
 //Accelerometer Values
 long accelX, accelY, accelZ;
@@ -58,25 +60,16 @@ void setup() {
     button1.setDebounceTime(30);
     button2.setDebounceTime(30); 
     button3.setDebounceTime(30); 
+    joyButton.setDebounceTime(30);
   }
 }
 
 void loop() {
+
   //Run Joystick Code
   if(JoystickRun == 1){
     processJoyStick();
-    /*
-    int xValue = analogRead(joyX);
-    int yValue = analogRead(joyY);
-    mapX = map(xValue, 0, 1023, -512, 512);
-    mapY = map(yValue, 0, 1023, -512, 512);
-    Serial.print("JoyX: ");
-    Serial.print(xValue);
-    Serial.print(" | JoyY: ");
-    Serial.println(yValue);
-    */
   }
-  //End Joystick Code
 
   //Run Accel Code
   if(AccelRun == 1){
@@ -103,10 +96,12 @@ void runButtonCode(){
   button1.loop();
   button2.loop();
   button3.loop();
+  joyButton.loop();
 
   button1State = !(button1.getState());
   button2State = !(button2.getState());
   button3State = !(button3.getState());
+  joyButtonState = !(joyButton.getState());
 
   if(!(button1State) && !(button2State) && !(button3State)){ // 000
      Serial.println(1);
@@ -138,6 +133,10 @@ void runButtonCode(){
 
   if(button1State && button2State && button3State) { // 111
     Serial.println(13);
+  }
+
+  if(joyButtonState) {
+    Serial.println(14);
   }
 }
 
@@ -213,8 +212,8 @@ void printAccelData() {
 void processJoyStick(){
   int xValue = analogRead(joyX);
   int yValue = analogRead(joyY);
-  Serial.print("JoyX: ");
-  Serial.print(xValue);
-  Serial.print(" | JoyY: ");
-  Serial.println(yValue);
+  mapX = map(xValue, 0, 1023, -512, 512);
+  mapY = map(yValue, 0, 1023, -512, 512);
+  // TODO process left/right as +/- 1 for serial output
+  
 }
