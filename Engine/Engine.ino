@@ -1,6 +1,7 @@
 #include <Time.h> 
 #include <Wire.h>
 #include <ezButton.h>
+#include <Bounce2.h>
 
 //Jitter and Latency Values
 unsigned long clocktime;
@@ -13,16 +14,23 @@ int lastLatency = 0;
 int delayTime = 10;
 
 //WhatShouldRun
-int JoystickRun = 0;
-int GyroRun = 1;
-int AccelRun = 1;
-int ButtonRun = 1;
+int JoystickRun = 1;
+int GyroRun = 0;
+int AccelRun = 0;
+int ButtonRun = 0;
 
 //Joystick Values
 int joyX = A0;
 int joyY = A1;
 int mapX = 0;
 int mapY = 0;
+int xPrev;
+int xCurrent;
+bool xChange;
+int yPrev;
+int yCurrent;
+bool yChange;
+
 
 // Initalize the buttons
 ezButton button1(3);
@@ -39,10 +47,10 @@ long accelX, accelY, accelZ;
 float gForceX, gForceY, gForceZ;
 long gyroX, gyroY, gyroZ;
 float rotX, rotY, rotZ;
+float temporary;
 
 void setup() {
   Serial.begin(9600);
-
   //Joystick Init
   if(JoystickRun == 1){
     pinMode(joyX, INPUT);
@@ -65,21 +73,25 @@ void setup() {
 }
 
 void loop() {
-
+    
   //Run Joystick Code
   if(JoystickRun == 1){
     processJoyStick();
+    
   }
 
   //Run Accel Code
   if(AccelRun == 1){
     recordAccelRegisters();        // print negative Z value with 4 decimal places
+    temporary = -1.0*fabs(gForceY);
+    Serial.println(temporary,4); // formatted for max usage
   }
   if(GyroRun == 1){
     recordGyroRegisters();
   }
   if(AccelRun == 1 || GyroRun == 1){
-    Serial.println(-1*abs(gForceZ), 4); // formatted for max usage
+    // float temp = fabs(gForceY);
+    // Serial.println(temp, 4); // formatted for max usage
   }
 
   //Button Code
@@ -98,9 +110,9 @@ void runButtonCode(){
   button3.loop();
   joyButton.loop();
 
-  button1State = !(button1.getState());
-  button2State = !(button2.getState());
-  button3State = !(button3.getState());
+  button1State = button1.getState();
+  button2State = button2.getState();
+  button3State = button3.getState();
   joyButtonState = !(joyButton.getState());
 
   if(!(button1State) && !(button2State) && !(button3State)){ // 000
@@ -135,7 +147,7 @@ void runButtonCode(){
     Serial.println(13);
   }
 
-  if(joyButtonState) {
+  if(joyButton.isPressed()) {
     Serial.println(14);
   }
 }
@@ -212,8 +224,24 @@ void printAccelData() {
 void processJoyStick(){
   int xValue = analogRead(joyX);
   int yValue = analogRead(joyY);
-  mapX = map(xValue, 0, 1023, -512, 512);
-  mapY = map(yValue, 0, 1023, -512, 512);
-  // TODO process left/right as +/- 1 for serial output
+  mapY = map(xValue, 0, 1023, 512, -512);
+  mapX = map(yValue, 0, 1023, 512, -512);
+  Serial.println(mapX);
+  Serial.println(mapY);
+  xCurrent = mapX;
+  yCurrent = mapY;
+  if(xCurrent >= 256 && xPrev < 256) {
+    Serial.println("x has crossed threshold"); 
+  }
+  if(yCurrent >= 256 && yPrev < 256) {
+    Serial.println("y has crossed threshold");
+  }
+  xPrev = xCurrent;
+  yPrev = yCurrent;
+  // TODO create threshold values for negative X and Y too
+  // create a "transmit" variable to modify using processJoystick that ends up being printed to serial port by buttons
+  // make the "half step" +-1 a WHILE HELD value, and "octave" +-12 a WHEN CROSSED value
+  // the octave should be easy. just add or subtract 12 when threshold is crossed
+  // half step would be tougher to not continually increment. will have to consult w group members on that one
   
 }
