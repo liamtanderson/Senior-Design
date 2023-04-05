@@ -16,7 +16,7 @@ int delayTime = 10;
 //WhatShouldRun
 int JoystickRun = 1;
 int GyroRun = 0;
-int AccelRun = 0;
+int AccelRun = 1;
 int ButtonRun = 1;
 
 //Joystick Values
@@ -24,12 +24,10 @@ int joyX = A0;
 int joyY = A1;
 int mapX = 0;
 int mapY = 0;
-int xPrev;
-int xCurrent;
-bool xChange;
-int yPrev;
-int yCurrent;
-bool yChange;
+int xPrev = 0;
+int xCurrent = 0;
+int yPrev = 0;
+int yCurrent = 0;
 
 
 // Initalize the buttons
@@ -243,10 +241,14 @@ void processJoyStick() {
   if (yCurrent <= -256 && yPrev > -256) {
     Serial.println(18);  // minus one octave
   }
+
+  if (abs(xCurrent) <= 256 && abs(xPrev) > 256) {
+    Serial.println(20); // this eliminates half step
+  }
+
   xPrev = xCurrent;
   yPrev = yCurrent;
   // TODO create threshold values for negative X and Y too
-  // create a "transmit" variable to modify using processJoystick that ends up being printed to serial port by buttons
   // make the "half step" +-1 a WHILE HELD value, and "octave" +-12 a WHEN CROSSED value
   // the octave should be easy. just add or subtract 12 when threshold is crossed
   // half step would be tougher to not continually increment. will have to consult w group members on that one
