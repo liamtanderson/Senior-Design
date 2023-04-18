@@ -1,3 +1,4 @@
+#include <serialMIDI.h>
 #include <Time.h>
 #include <Wire.h>
 #include <ezButton.h>
@@ -38,7 +39,6 @@ ezButton joyButton(6);
 int button1State = 0;
 int button2State = 0;
 int button3State = 0;
-int joyButtonState = 0;
 
 //Accelerometer Values
 long accelX, accelY, accelZ;
@@ -47,7 +47,14 @@ long gyroX, gyroY, gyroZ;
 float rotX, rotY, rotZ;
 float temporary;
 
+//MIDI Values
+int channel = 1;
+int velocity = 100;  // placeholder
+int pitch;
+MIDI_CREATE_DEFAULT_INSTANCE();
+
 void setup() {
+  MIDI.begin();
   Serial.begin(9600);
   //Joystick Init
   if (JoystickRun == 1) {
@@ -68,6 +75,8 @@ void setup() {
     button3.setDebounceTime(30);
     joyButton.setDebounceTime(30);
   }
+  // MIDI Init
+  
 }
 
 void loop() {
@@ -78,11 +87,7 @@ void loop() {
   }
 
   //Run Accel Code
-  if (AccelRun == 1) {
-    recordAccelRegisters();  // print negative Z value with 4 decimal places
-    temporary = -1.0 * fabs(gForceY);
-    Serial.println(temporary, 4);  // formatted for max usage
-  }
+
   if (GyroRun == 1) {
     recordGyroRegisters();
   }
@@ -94,6 +99,13 @@ void loop() {
   //Button Code
   if (ButtonRun == 1) {
     runButtonCode();
+  }
+
+  if (AccelRun == 1) {
+    recordAccelRegisters();  // print negative Z value with 4 decimal places
+    if (gForceY > 1.05) {
+      MIDI.sendNoteOn(pitch, velocity, channel);
+    }
   }
 
   delay(delayTime);
@@ -110,42 +122,42 @@ void runButtonCode() {
   button1State = button1.getState();
   button2State = button2.getState();
   button3State = button3.getState();
-  joyButtonState = !(joyButton.getState());
+  pitch = 48;  // C3
 
   if (!(button1State) && !(button2State) && !(button3State)) {  // 000
-    Serial.println(1);
+    pitch = 48;
   }
 
   if (button1State && !(button2State) && !(button3State)) {  // 001
-    Serial.println(3);
+    pitch = 50;
   }
 
   if (!(button1State) && button2State && !(button3State)) {  // 010
-    Serial.println(5);
+    pitch = 52;
   }
 
   if (button1State && button2State && !(button3State)) {  // 011
-    Serial.println(6);
+    pitch = 53;
   }
 
   if (!(button1State) && !(button2State) && button3State) {  // 100
-    Serial.println(8);
+    pitch = 55;
   }
 
   if (button1State && !(button2State) && button3State) {  // 101
-    Serial.println(10);
+    pitch = 57;
   }
 
   if (!(button1State) && button2State && button3State) {  // 110
-    Serial.println(12);
+    pitch = 59;
   }
 
   if (button1State && button2State && button3State) {  // 111
-    Serial.println(13);
+    pitch = 60;
   }
 
   if (joyButton.isPressed()) {
-    Serial.println(14);  // joystick click
+    MIDI.sendControlChange(20, 1, channel);
   }
 }
 
@@ -182,6 +194,9 @@ void processAccelData() {
   gForceX = accelX / 16384.0;
   gForceY = accelY / 16384.0;
   gForceZ = accelZ / 16384.0;
+  if (gForceY >= 1.1) {
+    MIDI.sendNoteOn(pitch, velocity, channel);
+  }
 }
 
 void recordGyroRegisters() {
@@ -243,13 +258,10 @@ void processJoyStick() {
   }
 
   if (abs(xCurrent) <= 256 && abs(xPrev) > 256) {
-    Serial.println(20); // this eliminates half step
+    Serial.println(20);  // this eliminates half step
   }
 
   xPrev = xCurrent;
   yPrev = yCurrent;
-  // TODO create threshold values for negative X and Y too
-  // make the "half step" +-1 a WHILE HELD value, and "octave" +-12 a WHEN CROSSED value
-  // the octave should be easy. just add or subtract 12 when threshold is crossed
-  // half step would be tougher to not continually increment. will have to consult w group members on that one
+
 }
