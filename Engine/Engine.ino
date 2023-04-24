@@ -48,7 +48,7 @@ float rotX, rotY, rotZ;
 float temporary;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   //Joystick Init
   if (JoystickRun == 1) {
     pinMode(joyX, INPUT);
@@ -227,18 +227,18 @@ void processJoyStick() {
   mapY = map(yValue, 0, 1023, 512, -512);
   xCurrent = mapX;
   yCurrent = mapY;
-  if (xCurrent >= 256 && xPrev < 256) {
+  if (xCurrent >= 256 && xPrev < 256 && abs(yCurrent) < 180) {
     Serial.println(15);  // plus one half step
   }
-  if (xCurrent <= -256 && xPrev > -256) {
+  if (xCurrent <= -256 && xPrev > -256 && abs(yCurrent) < 180) {
     Serial.println(16);  // minus one half step
   }
 
-  if (yCurrent >= 256 && yPrev < 256) {
+  if (yCurrent >= 256 && yPrev < 256 && abs(xCurrent) < 180) {
     Serial.println(17);  // plus one octave
   }
 
-  if (yCurrent <= -256 && yPrev > -256) {
+  if (yCurrent <= -256 && yPrev > -256 && abs(xCurrent) < 180) {
     Serial.println(18);  // minus one octave
   }
 
